@@ -8,7 +8,7 @@ socket.on('connect', () => {
   console.log('Client: ', socket.id);
 });
 
-socket.on('newRobot', (robotCode) => {
+socket.on('robotExecution', (robotCode) => {
   //console.log('newRobot: ', robotCode);
   fs.writeFile('./executable.robot', robotCode, function (err) {
     if (err) {
