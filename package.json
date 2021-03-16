@@ -2,7 +2,6 @@
   "name": "ark-automate-local",
   "version": "1.0.0",
   "description": "Execute robots build with ark_automate locally",
-  "type": "module",
   "scripts": {
     "start": "node index",
     "build": "",
@@ -10,6 +9,7 @@
     "lint": "eslint --ignore-path ../.gitignore --ext .js,.jsx ."
   },
   "dependencies": {
+    "fs": "0.0.1-security",
     "socket.io-client": "^4.0.0"
   },
   "devDependencies": {
