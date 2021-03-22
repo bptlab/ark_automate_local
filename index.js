@@ -1,89 +1,47 @@
 const fs = require('fs');
-const exec = require('child_process').exec;
-const io = require('socket.io-client');
 const readline = require('readline').createInterface({
   input: process.stdin,
   output: process.stdout,
 });
+const config = require('./config.json');
+const { connectWithSocket } = require('./robotExecution/socketConnection');
+const { printLogo } = require('./utils/printLogo');
 
-// const userId = '80625d115100a2ee8d8e695b';
-let userId = '';
+// Lukas Test Id = '80625d115100a2ee8d8e695b';
 
-// user and client management
-
-const getUserId = () => {
-  if (userId !== '') {
-    console.log(`Starting Client...`);
+const startProgram = () => {
+  if (config.userId !== '') {
+    console.log('\n');
+    console.log('################ SOCKET CONNECTION ###############');
+    console.log('\n');
+    connectWithSocket(config);
   } else {
     readline.question(`Please enter your userId: `, (enteredUserId) => {
+      let configurationData = {
+        userId: '',
+      };
+      configurationData.userId = enteredUserId;
+      let newConfig = JSON.stringify(configurationData);
+
       console.log('\n');
-      console.log(`UserId successfully entered!`);
-      userId = String(enteredUserId);
+
+      fs.writeFile('./config.json', newConfig, (err) => {
+        if (err) {
+          console.log('There has been an error saving your userId.');
+          console.log(err.message);
+          return;
+        }
+        console.log(`UserId saved successfully.`);
+      });
       readline.close();
+
       console.log('\n');
       console.log('################ SOCKET CONNECTION ###############');
       console.log('\n');
-
-      // socket stuff
-
-      const socket = io('http://localhost:5001');
-
-      socket.on('connect', () => {
-        console.log('Connected as client with socket: ', socket.id);
-        console.log('\n');
-        console.log('################ UPDATES ###############');
-        console.log('\n');
-        socket.emit('joinUserRoom', userId);
-      });
-
-      socket.on('successUserRoomConnection', (message) => {
-        console.log(message);
-      });
-      socket.on('errorUserRoomConnection', (message) => {
-        console.log(message);
-      });
-      socket.on('newClientJoinedUserRoom', (message) => {
-        console.log(message);
-      });
-
-      socket.on('robotExecution', (robotCode) => {
-        //console.log('newRobot: ', robotCode);
-        fs.writeFile('./executable.robot', robotCode, function (err) {
-          if (err) {
-            return console.log(err);
-          }
-          console.log('The file was saved!');
-        });
-        exec('robot executable.robot');
-      });
+      connectWithSocket(configurationData);
     });
   }
 };
 
-// user input
-
-const printLogo = () => {
-  console.log('\n');
-  console.log(
-    ' █████╗ ██████╗ ██╗  ██╗     █████╗ ██╗   ██╗████████╗ ██████╗ ███╗   ███╗ █████╗ ████████╗███████╗'
-  );
-  console.log(
-    '██╔══██╗██╔══██╗██║ ██╔╝    ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗████╗ ████║██╔══██╗╚══██╔══╝██╔════╝'
-  );
-  console.log(
-    '███████║██████╔╝█████╔╝     ███████║██║   ██║   ██║   ██║   ██║██╔████╔██║███████║   ██║   █████╗'
-  );
-  console.log(
-    '██╔══██║██╔══██╗██╔═██╗     ██╔══██║██║   ██║   ██║   ██║   ██║██║╚██╔╝██║██╔══██║   ██║   ██╔══╝'
-  );
-  console.log(
-    '██║  ██║██║  ██║██║  ██╗    ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██║ ╚═╝ ██║██║  ██║   ██║   ███████╗'
-  );
-  console.log(
-    '╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝'
-  );
-  console.log('\n');
-};
-
 printLogo();
-getUserId();
+startProgram();
