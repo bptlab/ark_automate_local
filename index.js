@@ -7,9 +7,12 @@ const config = require('./config.json');
 const { connectWithSocket } = require('./robotExecution/socketConnection');
 const { printLogo } = require('./utils/printLogo');
 
-// Lukas Test Id = '80625d115100a2ee8d8e695b';
+//Test Id (Lukas) = '80625d115100a2ee8d8e695b';
 
-const startProgram = () => {
+/**
+ * @description Starts the desktop application
+ */
+const startApplication = () => {
   if (config.userId !== '') {
     console.log('\n');
     console.log('################ SOCKET CONNECTION ###############');
@@ -44,4 +47,4 @@ const startProgram = () => {
 };
 
 printLogo();
-startProgram();
+startApplication();
