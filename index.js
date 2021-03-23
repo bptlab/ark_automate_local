@@ -21,9 +21,8 @@ const startApplication = () => {
   } else {
     readline.question(`Please enter your userId: `, (enteredUserId) => {
       let configurationData = {
-        userId: '',
+        userId: enteredUserId,
       };
-      configurationData.userId = enteredUserId;
       let newConfig = JSON.stringify(configurationData);
 
       console.log('\n');
