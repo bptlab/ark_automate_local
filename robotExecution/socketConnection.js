@@ -40,7 +40,7 @@ exports.connectWithSocket = (configurationData) => {
       }
     );
     // test.robot is just used for testing purposes. Use executable.robot for the real product.
-    exec('robot ./robotExecution/test.robot', (err) => {
+    exec('robot ./robotExecution/executable.robot', (err) => {
       if (err) {
         console.log(err.message);
         socket.emit('updatedRobotJob', { jobId, status: 'failed' });
