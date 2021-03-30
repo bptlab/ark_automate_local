@@ -2,11 +2,12 @@
   "name": "ark-automate-local",
   "version": "1.0.0",
   "description": "Execute robots build with ark_automate locally",
+  "main": "bin/index.js",
   "scripts": {
-    "start": "node index",
-    "build": "",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --ignore-path ../.gitignore --ext .js,.jsx ."
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ark": "./bin/index.js"
   },
   "dependencies": {
     "fs": "0.0.1-security",

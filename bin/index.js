@@ -1,11 +1,12 @@
+#!/usr/bin/env node
 const fs = require('fs');
 const readline = require('readline').createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-const config = require('./config.json');
-const { connectWithSocket } = require('./robotExecution/socketConnection');
-const { printLogo } = require('./utils/printLogo');
+const config = require('../config.json');
+const { connectWithSocket } = require('../robotExecution/socketConnection');
+const { printLogo } = require('../utils/printLogo');
 
 //Test Id (Lukas) = '80625d115100a2ee8d8e695b';
 
