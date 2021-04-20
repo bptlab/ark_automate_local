@@ -10,7 +10,3 @@ Locally execute robots build with ark_automate
 ## Get started
 
 Start the application in the current directory by running **ark** in your command line
-
-## Configuration
-
-Change the UserId by executing **arkChangeUserId** in your command line and type in the new userId.
