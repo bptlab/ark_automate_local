@@ -5,6 +5,7 @@ Locally execute robots build with ark_automate
 ## Setup
 
 - make sure you have node and robot framework installed on your machine
+- make sure you have rpaframework installed (version 9.6.0)
 - execute npm install -g
 
 ## Get started
