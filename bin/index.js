@@ -8,7 +8,7 @@ const config = require('../config.json');
 const { connectWithSocket } = require('../robotExecution/socketConnection');
 const { printLogo } = require('../utils/printLogo');
 
-//Test Id (Lukas) = '80625d115100a2ee8d8e695b';
+// Test Id (Lukas) = '80625d115100a2ee8d8e695b';
 
 /**
  * @description Starts the desktop application
@@ -20,11 +20,11 @@ const startApplication = () => {
     console.log('\n');
     connectWithSocket(config);
   } else {
-    readline.question(`Please enter your userId: `, (enteredUserId) => {
-      let configurationData = {
+    readline.question('Please enter your userId: ', (enteredUserId) => {
+      const configurationData = {
         userId: enteredUserId,
       };
-      let newConfig = JSON.stringify(configurationData);
+      const newConfig = JSON.stringify(configurationData);
 
       console.log('\n');
 
@@ -34,7 +34,7 @@ const startApplication = () => {
           console.log(err.message);
           return;
         }
-        console.log(`UserId saved successfully.`);
+        console.log('UserId saved successfully.');
       });
       readline.close();
 
