@@ -1,6 +1,8 @@
 const fs = require('fs');
-const exec = require('child_process').exec;
+const { exec } = require('child_process');
 const io = require('socket.io-client');
+const parser = require('xml2json');
+const { wasRobotRunSuccessfull } = require('../utils/statusWorker');
 
 /**
  * @description Connects client with the server by using a socket. Also joins the respective room for the given userId
@@ -30,22 +32,26 @@ exports.connectWithSocket = (configurationData) => {
   });
 
   socket.on('robotExecution', ({ robotCode, jobId }) => {
-    fs.writeFile(
-      './robotExecution/executable.robot',
-      robotCode,
-      function (err) {
-        if (err) {
-          return console.log(err);
-        }
+    fs.writeFile('./robotExecution/executable.robot', robotCode, (err) => {
+      if (err) {
+        return console.log(err);
       }
-    );
+    });
+
     // test.robot is just used for testing purposes. Use executable.robot for the real product.
     exec('robot ./robotExecution/executable.robot', (err) => {
-      if (err) {
-        console.log(err.message);
-        socket.emit('updatedRobotJob', { jobId, status: 'failed' });
+      const robotRunLogXml = fs.readFileSync('./output.xml', 'utf8');
+      let robotRunLog = parser.toJson(robotRunLogXml);
+      robotRunLog = JSON.parse(robotRunLog);
+
+      if (wasRobotRunSuccessfull(robotRunLog)) {
+        socket.emit('updatedRobotJobStatus', { jobId, status: 'successful' });
+      } else {
+        if (err) {
+          console.error(err.message);
+        }
+        socket.emit('updatedRobotJobStatus', { jobId, status: 'failed' });
       }
-      socket.emit('updatedRobotJobStatus', { jobId, status: 'success' });
 
       // delete all unnecessary files after robot execution
       exec('find . -name "*.xml" -type f|xargs rm -f');
