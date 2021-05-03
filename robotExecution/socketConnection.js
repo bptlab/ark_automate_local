@@ -1,4 +1,5 @@
 const fs = require('fs');
+const chokidar = require('chokidar');
 const exec = require('child_process').exec;
 const io = require('socket.io-client');
 
@@ -40,17 +41,32 @@ exports.connectWithSocket = (configurationData) => {
       }
     );
     // test.robot is just used for testing purposes. Use executable.robot for the real product.
-    exec('robot ./robotExecution/executable.robot', (err) => {
-      if (err) {
-        console.log(err.message);
-        socket.emit('updatedRobotJob', { jobId, status: 'failed' });
-      }
-      socket.emit('updatedRobotJobStatus', { jobId, status: 'success' });
+    exec(
+      'robot --listener LiveLogsListener.py ./robotExecution/DanielTest2.robot',
+      (err) => {
+        if (err) {
+          console.log(err.message);
+          socket.emit('updatedRobotJob', { jobId, status: 'failed' });
+        }
+        socket.emit('updatedRobotJobStatus', { jobId, status: 'success' });
 
-      // delete all unnecessary files after robot execution
-      exec('find . -name "*.xml" -type f|xargs rm -f');
-      exec('find . -name "*.html" -type f|xargs rm -f');
-      exec('find . -name "*.log" -type f|xargs rm -f');
+        // delete all unnecessary files after robot execution
+        exec('find . -name "*.xml" -type f|xargs rm -f');
+        exec('find . -name "*.html" -type f|xargs rm -f');
+        exec('find . -name "*.log" -type f|xargs rm -f');
+      }
+    );
+  });
+  const watcher = chokidar.watch('./robotLogs.json');
+  watcher.on('change', () => {
+    console.log('File was changed!');
+    fs.readFile('./robotLogs.json', (err, data) => {
+      if (err) {
+        throw err;
+      } else {
+        // let currentLog = JSON.parse(data);
+        socket.emit('updatedRobotJob', { data });
+      }
     });
   });
 };
