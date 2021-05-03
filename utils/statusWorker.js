@@ -3,8 +3,8 @@
  * @param {Object} robotRunLog Json object that contains the robot run log
  */
 exports.wasRobotRunSuccessfull = (robotRunLog) => {
-  if (robotRunLog.robot.suite.test.status.status === 'PASS') {
-    return true;
+  if (robotRunLog.robot.statistics.suite.stat['@attributes'].fail !== '0') {
+    return false;
   }
-  return false;
+  return true;
 };
