@@ -1,11 +1,11 @@
-const { wasRobotRunSuccessfull } = require('./statusWorker');
+const { wasRobotRunSuccessful } = require('./statusWorker');
 const { failingRobotRun, passingRobotRun } = require('./testData');
 
 describe('entire robot run status', () => {
   it('classifies a passed suite as passing', () => {
-    expect(wasRobotRunSuccessfull(passingRobotRun)).toBe(true);
+    expect(wasRobotRunSuccessful(passingRobotRun)).toBe(true);
   });
   it('classifies a failed suite as failing', () => {
-    expect(wasRobotRunSuccessfull(failingRobotRun)).toBe(false);
+    expect(wasRobotRunSuccessful(failingRobotRun)).toBe(false);
   });
 });

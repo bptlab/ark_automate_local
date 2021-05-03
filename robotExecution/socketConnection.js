@@ -2,7 +2,7 @@ const fs = require('fs');
 const { exec } = require('child_process');
 const io = require('socket.io-client');
 const parser = require('xml2json');
-const { wasRobotRunSuccessfull } = require('../utils/statusWorker');
+const { wasRobotRunSuccessful } = require('../utils/statusWorker');
 
 /**
  * @description Connects client with the server by using a socket. Also joins the respective room for the given userId
@@ -44,7 +44,7 @@ exports.connectWithSocket = (configurationData) => {
       let robotRunLog = parser.toJson(robotRunLogXml);
       robotRunLog = JSON.parse(robotRunLog);
 
-      if (wasRobotRunSuccessfull(robotRunLog)) {
+      if (wasRobotRunSuccessful(robotRunLog)) {
         socket.emit('updatedRobotJobStatus', { jobId, status: 'successful' });
       } else {
         if (err) {

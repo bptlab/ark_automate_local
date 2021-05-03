@@ -1,5 +1,5 @@
 /**
- * @description Evaluates if robot run has been successfull or not. See http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#suite-status for the possible suite statuses.
+ * @description Evaluates if robot run has been successful or not. See http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#suite-status for the possible suite statuses.
  * @param {Object} robotRunLog Json object that contains the robot run log
  */
 exports.wasRobotRunSuccessfull = (robotRunLog) => {
