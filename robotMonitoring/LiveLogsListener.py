@@ -1,4 +1,4 @@
-import os 
+import os
 import json
 import webbrowser
 
@@ -19,7 +19,7 @@ class LiveLogsListener:
 
             with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
                 liveLogs = json.load(live_logs_file)
-            
+
             liveLogs[f'robot_run'] = {
                 'name': name,
                 'activity_count': self.activity_count,
@@ -28,13 +28,13 @@ class LiveLogsListener:
 
             with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
                 json.dump(liveLogs, live_logs_file)
-    
+
     def start_test(self, name, attrs):
         self.activityName = name
         if self.activity_count != 0:
             with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
                 liveLogs = json.load(live_logs_file)
-            
+
             robotName = self.robotName.replace(' ', '')
             nameWithoutSpaces = name.replace(' ', '')
             liveLogs[f'robot_run']['activities'].append({
@@ -44,18 +44,18 @@ class LiveLogsListener:
 
             with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
                 json.dump(liveLogs, live_logs_file)
-    
+
     def end_keyword(self, name, attrs):
         if self.activity_count != 0:
             with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
                 liveLogs = json.load(live_logs_file)
-            
+
             robotName = self.robotName.replace(' ', '')
             activityName = self.activityName.replace(' ', '')
             taskName = attrs['kwname']
             taskStatus = attrs['status']
             nameWithoutSpaces = taskName.replace(' ', '')
-            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1 
+            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1
             liveLogs[f'robot_run']['activities'][currentActivity]['tasks'].append({
                 'task_name': taskName,
                 'status': taskStatus
@@ -68,13 +68,13 @@ class LiveLogsListener:
         if self.activity_count != 0:
             with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
                 liveLogs = json.load(live_logs_file)
-            
+
             robotName = self.robotName.replace(' ', '')
             activityName = self.activityName.replace(' ', '')
             nameWithoutSpaces = name.replace(' ', '')
             activityStatus = attrs['status']
             activityMessage = attrs['message']
-            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1 
+            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1
             liveLogs[f'robot_run']['activities'][currentActivity]['status'] = activityStatus
             liveLogs[f'robot_run']['activities'][currentActivity]['message'] = activityMessage
 
@@ -85,7 +85,7 @@ class LiveLogsListener:
         if self.activity_count != 0:
             with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
                 liveLogs = json.load(live_logs_file)
-            
+
             robotName = self.robotName.replace(' ', '')
             robotStatus = attrs['status']
             liveLogs[f'robot_run']['status'] = robotStatus
