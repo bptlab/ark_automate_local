@@ -2,6 +2,7 @@ const fs = require('fs');
 const chokidar = require('chokidar');
 const exec = require('child_process').exec;
 const io = require('socket.io-client');
+const { getRobotLogs } = require('../utils/robotLogsHelper');
 
 /**
  * @description Connects client with the server by using a socket. Also joins the respective room for the given userId
@@ -42,52 +43,30 @@ exports.connectWithSocket = (configurationData) => {
     );
     // test.robot is just used for testing purposes. Use executable.robot for the real product.
     exec(
-      'robot --listener LiveLogsListener.py ./robotExecution/DanielTest2.robot',
+      'robot --listener ./robotMonitoring/LiveLogsListener.py ./robotExecution/executable.robot',
       (err) => {
         if (err) {
           console.log(err.message);
         }
-
         // delete all unnecessary files after robot execution
         exec('find . -name "*.xml" -type f|xargs rm -f');
         exec('find . -name "*.html" -type f|xargs rm -f');
         exec('find . -name "*.log" -type f|xargs rm -f');
       }
     );
-    const watcher = chokidar.watch('./robotLogs.json');
+    const watcher = chokidar.watch('./robotMonitoring/robotLogs.json');
     watcher.on('change', () => {
-      console.log('File was changed!');
-
-      let robotLogs = fs.readFileSync('./robotLogs.json', (err, data) => {
-        if (err) {
-          throw err;
-        } else {
-          return data;
-        }
-      });
-      let logParsingFails = true;
-      let parsedData = '';
-      while (logParsingFails) {
+      let robotLogs = getRobotLogs();
+      while (true) {
         try {
-          console.log('TRYING IT AGAIN');
-          parsedData = JSON.parse(robotLogs);
-          console.log(parsedData);
-          logParsingFails = false;
+          robotLogs = JSON.parse(robotLogs);
           break;
-        } catch (e) {
-          console.log('CATCHED ERROR');
-          robotLogs = fs.readFileSync('./robotLogs.json', (err, data) => {
-            if (err) {
-              throw err;
-            } else {
-              return data;
-            }
-          });
+        } catch (error) {
+          robotLogs = getRobotLogs();
           continue;
         }
       }
-      console.log(jobId, 'JOBID');
-      socket.emit('updatedRobotJob', { jobId, robotLogs: parsedData });
+      socket.emit('updatedRobotJob', { jobId, robotLogs });
     });
   });
 };
