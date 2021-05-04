@@ -20,8 +20,7 @@ class LiveLogsListener:
             with open('robotLogs.json', 'r') as live_logs_file:
                 liveLogs = json.load(live_logs_file)
             
-            nameWithoutSpaces = name.replace(' ', '')
-            liveLogs[f'robot_{nameWithoutSpaces}'] = {
+            liveLogs[f'robot_run'] = {
                 'name': name,
                 'activity_count': self.activity_count,
                 'activities': []
@@ -38,7 +37,7 @@ class LiveLogsListener:
             
             robotName = self.robotName.replace(' ', '')
             nameWithoutSpaces = name.replace(' ', '')
-            liveLogs[f'robot_{robotName}']['activities'].append({
+            liveLogs[f'robot_run']['activities'].append({
                 'activity_name': name,
                 'tasks': []
             })
@@ -56,8 +55,8 @@ class LiveLogsListener:
             taskName = attrs['kwname']
             taskStatus = attrs['status']
             nameWithoutSpaces = taskName.replace(' ', '')
-            currentActivity = len(liveLogs[f'robot_{robotName}']['activities']) - 1 
-            liveLogs[f'robot_{robotName}']['activities'][currentActivity]['tasks'].append({
+            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1 
+            liveLogs[f'robot_run']['activities'][currentActivity]['tasks'].append({
                 'task_name': taskName,
                 'status': taskStatus
             })
@@ -75,9 +74,9 @@ class LiveLogsListener:
             nameWithoutSpaces = name.replace(' ', '')
             activityStatus = attrs['status']
             activityMessage = attrs['message']
-            currentActivity = len(liveLogs[f'robot_{robotName}']['activities']) - 1 
-            liveLogs[f'robot_{robotName}']['activities'][currentActivity]['status'] = activityStatus
-            liveLogs[f'robot_{robotName}']['activities'][currentActivity]['message'] = activityMessage
+            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1 
+            liveLogs[f'robot_run']['activities'][currentActivity]['status'] = activityStatus
+            liveLogs[f'robot_run']['activities'][currentActivity]['message'] = activityMessage
 
             with open('robotLogs.json', 'w') as live_logs_file:
                 json.dump(liveLogs, live_logs_file)
@@ -89,7 +88,7 @@ class LiveLogsListener:
             
             robotName = self.robotName.replace(' ', '')
             robotStatus = attrs['status']
-            liveLogs[f'robot_{robotName}']['status'] = robotStatus
+            liveLogs[f'robot_run']['status'] = robotStatus
 
             with open('robotLogs.json', 'w') as live_logs_file:
                 json.dump(liveLogs, live_logs_file)
@@ -97,7 +96,7 @@ class LiveLogsListener:
     def close(self):
         with open('robotLogs.json', 'r') as live_logs_file:
             liveLogs = json.load(live_logs_file)
-        liveLogs['final_message'] = 'Execution completed!'
+        liveLogs['final_message'] = 'Execution completed'
 
         with open('robotLogs.json', 'w') as live_logs_file:
             json.dump(liveLogs, live_logs_file)

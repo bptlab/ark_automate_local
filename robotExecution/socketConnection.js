@@ -46,9 +46,7 @@ exports.connectWithSocket = (configurationData) => {
       (err) => {
         if (err) {
           console.log(err.message);
-          socket.emit('updatedRobotJob', { jobId, status: 'failed' });
         }
-        socket.emit('updatedRobotJobStatus', { jobId, status: 'success' });
 
         // delete all unnecessary files after robot execution
         exec('find . -name "*.xml" -type f|xargs rm -f');
@@ -56,17 +54,40 @@ exports.connectWithSocket = (configurationData) => {
         exec('find . -name "*.log" -type f|xargs rm -f');
       }
     );
-  });
-  const watcher = chokidar.watch('./robotLogs.json');
-  watcher.on('change', () => {
-    console.log('File was changed!');
-    fs.readFile('./robotLogs.json', (err, data) => {
-      if (err) {
-        throw err;
-      } else {
-        // let currentLog = JSON.parse(data);
-        socket.emit('updatedRobotJob', { data });
+    const watcher = chokidar.watch('./robotLogs.json');
+    watcher.on('change', () => {
+      console.log('File was changed!');
+
+      let robotLogs = fs.readFileSync('./robotLogs.json', (err, data) => {
+        if (err) {
+          throw err;
+        } else {
+          return data;
+        }
+      });
+      let logParsingFails = true;
+      let parsedData = '';
+      while (logParsingFails) {
+        try {
+          console.log('TRYING IT AGAIN');
+          parsedData = JSON.parse(robotLogs);
+          console.log(parsedData);
+          logParsingFails = false;
+          break;
+        } catch (e) {
+          console.log('CATCHED ERROR');
+          robotLogs = fs.readFileSync('./robotLogs.json', (err, data) => {
+            if (err) {
+              throw err;
+            } else {
+              return data;
+            }
+          });
+          continue;
+        }
       }
+      console.log(jobId, 'JOBID');
+      socket.emit('updatedRobotJob', { jobId, robotLogs: parsedData });
     });
   });
 };
