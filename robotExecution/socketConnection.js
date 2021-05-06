@@ -2,7 +2,6 @@ const fs = require('fs');
 const chokidar = require('chokidar');
 const exec = require('child_process').exec;
 const io = require('socket.io-client');
-const { getRobotLogs } = require('../utils/robotLogsHelper');
 
 /**
  * @description Connects client with the server by using a socket. Also joins the respective room for the given userId
@@ -43,7 +42,7 @@ exports.connectWithSocket = (configurationData) => {
     );
     // test.robot is just used for testing purposes. Use executable.robot for the real product.
     exec(
-      'robot --listener ./robotMonitoring/LiveLogsListener.py ./robotExecution/executable.robot',
+      'robot --listener ./robotMonitoring/LiveLogsListener.py ./robotExecution/test.robot',
       (err) => {
         if (err) {
           console.log(err.message);
@@ -54,19 +53,26 @@ exports.connectWithSocket = (configurationData) => {
         exec('find . -name "*.log" -type f|xargs rm -f');
       }
     );
-    const watcher = chokidar.watch('./robotMonitoring/robotLogs.json');
+    const watcher = chokidar.watch('./robotMonitoring/robotLogs.json', {
+      awaitWriteFinish: { stabilityThreshold: 500 },
+    });
     watcher.on('change', () => {
-      let robotLogs = getRobotLogs();
-      while (true) {
-        try {
-          robotLogs = JSON.parse(robotLogs);
-          break;
-        } catch (error) {
-          robotLogs = getRobotLogs();
-          continue;
+      let robotLogs = fs.readFileSync(
+        './robotMonitoring/robotLogs.json',
+        (err, data) => {
+          if (err) {
+            throw err;
+          } else {
+            return data;
+          }
         }
+      );
+      try {
+        robotLogs = JSON.parse(robotLogs);
+        socket.emit('updatedLiveRobotLog', { jobId, robotLogs });
+      } catch (error) {
+        console.log(error);
       }
-      socket.emit('updatedRobotJob', { jobId, robotLogs });
     });
   });
 };

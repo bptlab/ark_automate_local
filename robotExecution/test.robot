@@ -11,7 +11,7 @@ Say Goodbye!
     Set Worksheet Value    2    2        EINS
     Set Worksheet Value    2    2        NICHTZWEI
 Browser2
-    Open Chrome Browser    http://www.zeit.de
+    Open Chro Browser    http://www.zeit.de
 Browser3
     Open Chrome Browser    http://www.google.com
     Set Worksheet Value    2    2        ZWEI
