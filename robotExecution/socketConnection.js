@@ -42,7 +42,7 @@ exports.connectWithSocket = (configurationData) => {
     );
     // debug.robot is just used for testing purposes. This allows for easy debugging when you want to specify the robot locally instead of the ark_automate web interface. Use executable.robot to use the one specified in the web app.
     exec(
-      'robot --listener ./robotMonitoring/LiveLogsListener.py ./robotExecution/test.robot',
+      'robot --listener ./robotMonitoring/LiveLogsListener.py ./robotExecution/debug.robot',
       (err) => {
         if (err) {
           console.log(err.message);
