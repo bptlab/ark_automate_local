@@ -69,7 +69,7 @@ exports.connectWithSocket = (configurationData) => {
       );
       try {
         robotLogs = JSON.parse(robotLogs);
-        socket.emit('updatedLiveRobotLog', { jobId, robotLogs });
+        socket.emit('updatedLiveRobotLog', { userId, jobId, robotLogs });
       } catch (error) {
         console.log(error);
       }
