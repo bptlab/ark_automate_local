@@ -1,4 +1,5 @@
 const fs = require('fs');
+const chokidar = require('chokidar');
 const exec = require('child_process').exec;
 const io = require('socket.io-client');
 
@@ -39,18 +40,39 @@ exports.connectWithSocket = (configurationData) => {
         }
       }
     );
-    // test.robot is just used for testing purposes. Use executable.robot for the real product.
-    exec('robot ./robotExecution/executable.robot', (err) => {
-      if (err) {
-        console.log(err.message);
-        socket.emit('updatedRobotJob', { jobId, status: 'failed' });
+    // debug.robot is just used for testing purposes. This allows for easy debugging when you want to specify the robot locally instead of the ark_automate web interface. Use executable.robot to use the one specified in the web app.
+    exec(
+      'robot --listener ./robotMonitoring/LiveLogsListener.py ./robotExecution/debug.robot',
+      (err) => {
+        if (err) {
+          console.log(err.message);
+        }
+        // delete all unnecessary files after robot execution
+        exec('find . -name "*.xml" -type f|xargs rm -f');
+        exec('find . -name "*.html" -type f|xargs rm -f');
+        exec('find . -name "*.log" -type f|xargs rm -f');
       }
-      socket.emit('updatedRobotJobStatus', { jobId, status: 'success' });
-
-      // delete all unnecessary files after robot execution
-      exec('find . -name "*.xml" -type f|xargs rm -f');
-      exec('find . -name "*.html" -type f|xargs rm -f');
-      exec('find . -name "*.log" -type f|xargs rm -f');
+    );
+    const watcher = chokidar.watch('./robotMonitoring/robotLogs.json', {
+      awaitWriteFinish: { stabilityThreshold: 500 },
+    });
+    watcher.on('change', () => {
+      let robotLogs = fs.readFileSync(
+        './robotMonitoring/robotLogs.json',
+        (err, data) => {
+          if (err) {
+            throw err;
+          } else {
+            return data;
+          }
+        }
+      );
+      try {
+        robotLogs = JSON.parse(robotLogs);
+        socket.emit('updatedLiveRobotLog', { jobId, robotLogs });
+      } catch (error) {
+        console.log(error);
+      }
     });
   });
 };
