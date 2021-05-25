@@ -1,6 +1,6 @@
 const fs = require('fs');
 const chokidar = require('chokidar');
-const exec = require('child_process').exec;
+const {exec} = require('child_process');
 const io = require('socket.io-client');
 
 /**
@@ -42,7 +42,7 @@ exports.connectWithSocket = (configurationData) => {
     );
     // debug.robot is just used for testing purposes. This allows for easy debugging when you want to specify the robot locally instead of the ark_automate web interface. Use executable.robot to use the one specified in the web app.
     exec(
-      'robot --listener ./robotMonitoring/LiveLogsListener.py ./robotExecution/debug.robot',
+      'robot --listener ./robotMonitoring/liveLogsListener.py ./robotExecution/debug.robot',
       (err) => {
         if (err) {
           console.log(err.message);

@@ -2,101 +2,101 @@ import os
 import json
 import webbrowser
 
-class LiveLogsListener:
+class liveLogsListener:
 
     ROBOT_LISTENER_API_VERSION = 2
 
     def __init__(self):
         liveLogs = {}
-        with open('./robotMonitoring/robotLogs.json','w') as live_logs_file:
-            json.dump(liveLogs, live_logs_file)
+        with open('./robotMonitoring/robotLogs.json','w') as liveLogsFile:
+            json.dump(liveLogs, liveLogsFile)
 
     def start_suite(self, name, attrs):
-        self.activity_count = len(attrs['tests'])
+        self.activityCount = len(attrs['tests'])
         self.robotName = name
 
-        if self.activity_count != 0:
+        if self.activityCount != 0:
 
-            with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
-                liveLogs = json.load(live_logs_file)
+            with open('./robotMonitoring/robotLogs.json', 'r') as liveLogsFile:
+                liveLogs = json.load(liveLogsFile)
 
-            liveLogs[f'robot_run'] = {
+            liveLogs[f'robotRun'] = {
                 'name': name,
-                'activity_count': self.activity_count,
+                'activityCount': self.activityCount,
                 'activities': []
             }
 
-            with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
-                json.dump(liveLogs, live_logs_file)
+            with open('./robotMonitoring/robotLogs.json', 'w') as liveLogsFile:
+                json.dump(liveLogs, liveLogsFile)
 
     def start_test(self, name, attrs):
         self.activityName = name
-        if self.activity_count != 0:
-            with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
-                liveLogs = json.load(live_logs_file)
+        if self.activityCount != 0:
+            with open('./robotMonitoring/robotLogs.json', 'r') as liveLogsFile:
+                liveLogs = json.load(liveLogsFile)
 
             robotName = self.robotName.replace(' ', '')
             nameWithoutSpaces = name.replace(' ', '')
-            liveLogs[f'robot_run']['activities'].append({
-                'activity_name': name,
+            liveLogs[f'robotRun']['activities'].append({
+                'activityName': name,
                 'tasks': []
             })
 
-            with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
-                json.dump(liveLogs, live_logs_file)
+            with open('./robotMonitoring/robotLogs.json', 'w') as liveLogsFile:
+                json.dump(liveLogs, liveLogsFile)
 
     def end_keyword(self, name, attrs):
-        if self.activity_count != 0:
-            with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
-                liveLogs = json.load(live_logs_file)
+        if self.activityCount != 0:
+            with open('./robotMonitoring/robotLogs.json', 'r') as liveLogsFile:
+                liveLogs = json.load(liveLogsFile)
 
             robotName = self.robotName.replace(' ', '')
             activityName = self.activityName.replace(' ', '')
             taskName = attrs['kwname']
             taskStatus = attrs['status']
             nameWithoutSpaces = taskName.replace(' ', '')
-            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1
-            liveLogs[f'robot_run']['activities'][currentActivity]['tasks'].append({
-                'task_name': taskName,
+            currentActivity = len(liveLogs[f'robotRun']['activities']) - 1
+            liveLogs[f'robotRun']['activities'][currentActivity]['tasks'].append({
+                'taskName': taskName,
                 'status': taskStatus
             })
 
-            with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
-                json.dump(liveLogs, live_logs_file)
+            with open('./robotMonitoring/robotLogs.json', 'w') as liveLogsFile:
+                json.dump(liveLogs, liveLogsFile)
 
     def end_test(self, name, attrs):
-        if self.activity_count != 0:
-            with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
-                liveLogs = json.load(live_logs_file)
+        if self.activityCount != 0:
+            with open('./robotMonitoring/robotLogs.json', 'r') as liveLogsFile:
+                liveLogs = json.load(liveLogsFile)
 
             robotName = self.robotName.replace(' ', '')
             activityName = self.activityName.replace(' ', '')
             nameWithoutSpaces = name.replace(' ', '')
             activityStatus = attrs['status']
             activityMessage = attrs['message']
-            currentActivity = len(liveLogs[f'robot_run']['activities']) - 1
-            liveLogs[f'robot_run']['activities'][currentActivity]['status'] = activityStatus
-            liveLogs[f'robot_run']['activities'][currentActivity]['message'] = activityMessage
+            currentActivity = len(liveLogs[f'robotRun']['activities']) - 1
+            liveLogs[f'robotRun']['activities'][currentActivity]['status'] = activityStatus
+            liveLogs[f'robotRun']['activities'][currentActivity]['message'] = activityMessage
 
-            with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
-                json.dump(liveLogs, live_logs_file)
+            with open('./robotMonitoring/robotLogs.json', 'w') as liveLogsFile:
+                json.dump(liveLogs, liveLogsFile)
 
     def end_suite(self, name, attrs):
-        if self.activity_count != 0:
-            with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
-                liveLogs = json.load(live_logs_file)
+        if self.activityCount != 0:
+            with open('./robotMonitoring/robotLogs.json', 'r') as liveLogsFile:
+                liveLogs = json.load(liveLogsFile)
 
             robotName = self.robotName.replace(' ', '')
             robotStatus = attrs['status']
-            liveLogs[f'robot_run']['status'] = robotStatus
+            liveLogs[f'robotRun']['status'] = robotStatus
 
-            with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
-                json.dump(liveLogs, live_logs_file)
+            with open('./robotMonitoring/robotLogs.json', 'w') as liveLogsFile:
+                json.dump(liveLogs, liveLogsFile)
 
     def close(self):
-        with open('./robotMonitoring/robotLogs.json', 'r') as live_logs_file:
-            liveLogs = json.load(live_logs_file)
-        liveLogs['final_message'] = 'Execution completed'
+        with open('./robotMonitoring/robotLogs.json', 'r') as liveLogsFile:
+            liveLogs = json.load(liveLogsFile)
+        liveLogs['finalMessage'] = 'Execution completed'
 
-        with open('./robotMonitoring/robotLogs.json', 'w') as live_logs_file:
-            json.dump(liveLogs, live_logs_file)
+        with open('./robotMonitoring/robotLogs.json', 'w') as liveLogsFile:
+            json.dump(liveLogs, liveLogsFile)
