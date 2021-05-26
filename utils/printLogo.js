@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 exports.printLogo = () => {
   console.log('\n');
   console.log(
