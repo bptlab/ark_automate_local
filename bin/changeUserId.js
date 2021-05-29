@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 const fs = require('fs');
 const readline = require('readline').createInterface({
   input: process.stdin,
@@ -12,10 +13,10 @@ const { printLogo } = require('../utils/printLogo');
  */
 const changeUserId = () => {
   readline.question(`Please enter a userId: `, (enteredUserId) => {
-    let configurationData = {
+    const configurationData = {
       userId: enteredUserId,
     };
-    let newConfig = JSON.stringify(configurationData);
+    const newConfig = JSON.stringify(configurationData);
     console.log('\n');
     const { userId } = config;
     const oldUserId = userId;
