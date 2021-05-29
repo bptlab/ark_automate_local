@@ -1,6 +1,6 @@
 # Local Client of Ark Automate
 
-This script allows the local execution of robots that were built in the [Ark Atuomate Web Application](https://github.com/bptlab/ark_automate). 
+This script allows the local execution of robots that were built in the [Ark Automate Web Application](https://github.com/bptlab/ark_automate). 
 
 ## Setup
 
@@ -26,5 +26,4 @@ The local client is the companion to the web application Ark-Automate. It regist
 A special feature is the `LiveLogsListener.py` which is an implementation of the [Listener Interface](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#listener-interface) provided by Robot Framwork. It reacts to the individual test cases run by executing the robot. A test case can be translated to one instruction element of the ssot. For each test case, information on the execution is written into the `robotLogs.json` which is observed by the local client. Each change will result in sending the entire `robotLogs.json` via the socketConnection to the backend, where it is further processed.
 
 ![Screenshot of local client in console](https://i.imgur.com/XYIvl5f.png)
-
 
