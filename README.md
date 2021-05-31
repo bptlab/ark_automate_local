@@ -4,7 +4,9 @@ This script allows the local execution of robots that were built in the [Ark Aut
 
 ## Setup
 
-The local client runs on Mac and Windows, although not all calls of the used robot framework libraries are working on all plattforms. Calls from [robotframeworks standard libraries](http://robotframework.org/robotframework/#standard-libraries) work on both operating systems, calls from the [rpaframework](https://rpaframework.org/#libraries) like `Excel.Application.Open Application` only work on windows.
+While calls from [robotframeworks standard libraries](http://robotframework.org/robotframework/#standard-libraries) work on Windows and MacOS, calls from the [rpaframework](https://rpaframework.org/#libraries) like `Excel.Application.Open Application` only work on Windows.  
+Because of missing security permissions we are currently not able to provide this version of the local client for MacOS. We recommend running it in a virtual machine instead.  
+Because of these factors, the local client for now is only supported to run on Windows.
 
 To run the client first make sure of the following:
 
