@@ -6,11 +6,10 @@ const { exec } = require('child_process');
 const io = require('socket.io-client');
 
 /**
- * @description Connects client with the server by using a socket. Also joins the respective room for the given userId
+ * @description Connects client with the server by using a socket and joins the respective room for the given userId
  * @param {Object} configurationData Json object that contains the userId
  */
 exports.connectWithSocket = (configurationData) => {
-  // socket stuff
   const { userId } = configurationData;
   const socket = io('http://localhost:5001');
 
@@ -40,7 +39,7 @@ exports.connectWithSocket = (configurationData) => {
     });
     // debug.robot is just used for testing purposes. This allows for easy debugging when you want to specify the robot locally instead of the ark_automate web interface. Use executable.robot to use the one specified in the web app.
     exec(
-      'robot --listener ./robotMonitoring/liveLogsListener.py ./robotExecution/debug.robot',
+      'robot --listener ./robotMonitoring/liveLogsListener.py ./robotExecution/executable.robot',
       (err) => {
         if (err) {
           console.log(err.message);
